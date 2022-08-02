@@ -167,7 +167,6 @@ enum Config {
 // TODO? maybe something for xbox or android?
 
 #define GTA_VERSION	GTAVC_PC_11
-
 // Enable configuration for handheld console ports
 #if defined(__SWITCH__) || defined(PSP2)
 	#define GTA_HANDHELD

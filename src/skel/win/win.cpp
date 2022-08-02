@@ -7,7 +7,6 @@
 #include <windows.h>
 #include <mmsystem.h>
 #include <shellapi.h>
-
 #include <windowsx.h>
 #include <basetsd.h>
 
@@ -2650,7 +2649,7 @@ HRESULT _InputInitialise()
 	HRESULT hr;
 
 	// Create a DInput object
-	if( FAILED( hr = DirectInput8Create( GetModuleHandle(nil), DIRECTINPUT_VERSION, 
+	 if(FAILED(hr = DirectInput8Create(GetModuleHandle(nil), DIRECTINPUT_VERSION, 
 										IID_IDirectInput8, (VOID**)&PSGLOBAL(dinterface), nil ) ) )
 		return hr;
 		
@@ -2662,7 +2661,7 @@ HRESULT _InputInitialiseMouse(bool exclusive)
 	HRESULT hr;
 
 	// Obtain an interface to the system mouse device.
-	if( FAILED( hr = PSGLOBAL(dinterface)->CreateDevice( GUID_SysMouse, &PSGLOBAL(mouse), nil ) ) )
+	 if(FAILED(hr = PSGLOBAL(dinterface)->CreateDevice(GUID_SysMouse, &PSGLOBAL(mouse), nil)))
 		return hr;
 	
 	// Set the data format to "mouse format" - a predefined data format 
@@ -2672,7 +2671,7 @@ HRESULT _InputInitialiseMouse(bool exclusive)
 	//
 	// This tells DirectInput that we will be passing a
 	// DIMOUSESTATE2 structure to IDirectInputDevice::GetDeviceState.
-	if( FAILED( hr = PSGLOBAL(mouse)->SetDataFormat( &c_dfDIMouse2 ) ) )
+	 if(FAILED(hr = PSGLOBAL(mouse)->SetDataFormat(&c_dfDIMouse2)))
 		return hr;
 	
 	if( FAILED( hr = PSGLOBAL(mouse)->SetCooperativeLevel( PSGLOBAL(window), (exclusive ? DISCL_EXCLUSIVE : DISCL_NONEXCLUSIVE) | DISCL_FOREGROUND ) ) )

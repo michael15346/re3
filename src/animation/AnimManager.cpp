@@ -12,6 +12,8 @@
 #include "AnimManager.h"
 #include "Streaming.h"
 
+
+#include <Windows.h>
 CAnimBlock CAnimManager::ms_aAnimBlocks[NUMANIMBLOCKS];
 CAnimBlendHierarchy CAnimManager::ms_aAnimations[NUMANIMATIONS];
 int32 CAnimManager::ms_numAnimBlocks;
@@ -1390,7 +1392,13 @@ CAnimManager::BlendAnimation(RpClump *clump, AssocGroupId groupId, AnimationId a
 	CAnimBlendClumpData *clumpData = *RPANIMBLENDCLUMPDATA(clump);
 	CAnimBlendAssociation *anim = GetAnimAssociation(groupId, animId);
 	bool isMovement = anim->IsMovement();
-	bool isPartial = anim->IsPartial();
+	bool isPartial;
+	__try {
+		isPartial = anim->IsPartial();
+	} __except(1) {
+		isPartial = false;
+	}
+	
 	CAnimBlendLink *link;
 	CAnimBlendAssociation *found = nil, *movementAnim = nil;
 	for(link = clumpData->link.next; link; link = link->next){
@@ -1456,9 +1464,17 @@ CAnimManager::CreateAnimAssocGroups(void)
 		group->groupId = i;
 		group->firstAnimId = def->animDescs[0].animId;
 		group->CreateAssociations(def->blockName, clump, def->animNames, def->numAnims);
-		for(j = 0; j < group->numAssociations; j++)
+		for (j = 0; j < group->numAssociations; j++)
+		{
+
 			// GetAnimation(i) in III (but it's in LoadAnimFiles), GetAnimation(group->animDesc[j].animId) in VC
-			group->GetAnimation(def->animDescs[j].animId)->flags |= def->animDescs[j].flags;
+			__try {
+				group->GetAnimation(def->animDescs[j].animId)->flags |= def->animDescs[j].flags;
+			} __except(GetExceptionCode() == EXCEPTION_ACCESS_VIOLATION) {
+				debug("Access violation in src\\animation\\AnimManager.cpp at line 1465");
+			}
+			
+		}
 		if(IsClumpSkinned(clump))
 			RpClumpForAllAtomics(clump, AtomicRemoveAnimFromSkinCB, nil);
 		RpClumpDestroy(clump);

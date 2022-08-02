@@ -598,12 +598,14 @@ CPed::OurPedCanSeeThisOne(CEntity *target, bool shootablesDoBlock)
 }
 
 // Some kind of binary sort
+
+
 void
 CPed::SortPeds(CPed **list, int min, int max)
 {
 	if (min >= max)
 		return;
-
+	
 	CVector leftDiff, rightDiff;
 	CVector middleDiff = GetPosition() - list[(max + min) / 2]->GetPosition();
 	float middleDist = middleDiff.Magnitude();
@@ -613,7 +615,11 @@ CPed::SortPeds(CPed **list, int min, int max)
 	while(right <= left){
 		float rightDist, leftDist;
 		do {
-			rightDiff = GetPosition() - list[right]->GetPosition();
+			__try {
+				rightDiff = GetPosition() - list[right]->GetPosition();
+			} __except(1) {
+			}
+			
 			rightDist = rightDiff.Magnitude();
 		} while (middleDist > rightDist && ++right);
 
@@ -633,6 +639,7 @@ CPed::SortPeds(CPed **list, int min, int max)
 	SortPeds(list, min, left);
 	SortPeds(list, right, max);
 }
+
 
 void
 CPed::SetMoveState(eMoveState state)

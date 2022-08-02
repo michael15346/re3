@@ -68,7 +68,12 @@ CAnimBlendAssocGroup::CopyAnimation(uint32 id)
 	CAnimBlendAssociation *anim = GetAnimation(id);
 	if(anim == nil)
 		return nil;
-	CAnimManager::UncompressAnimation(anim->hierarchy);
+	try {
+		CAnimManager::UncompressAnimation(anim->hierarchy);
+	} catch(void* e) {
+		
+	}
+	
 	return new CAnimBlendAssociation(*anim);
 }
 

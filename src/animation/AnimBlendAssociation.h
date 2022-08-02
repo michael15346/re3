@@ -4,6 +4,7 @@
 #include "AnimBlendNode.h"
 #include "AnimBlendHierarchy.h"
 
+
 enum {
 	ASSOC_RUNNING = 1,
 	ASSOC_REPEAT = 2,
@@ -55,7 +56,15 @@ public:
 	bool IsRunning(void) { return !!(flags & ASSOC_RUNNING); }
 	bool IsRepeating(void) { return !!(flags & ASSOC_REPEAT); }
 	bool IsPartial(void) { return !!(flags & ASSOC_PARTIAL); }
-	bool IsMovement(void) { return !!(flags & ASSOC_MOVEMENT); }
+	bool IsMovement(void)
+	{
+		__try {
+			return !!(flags & ASSOC_MOVEMENT);
+		} __except(1) {
+			debug("Exception in src\\animation\\AnimBlendAssociation.h at line 61"); //no windows.h no exception type differentiation
+			return false;
+		}
+	}
 	bool HasTranslation(void) { return !!(flags & ASSOC_HAS_TRANSLATION); }
 	bool HasXTranslation(void) { return !!(flags & ASSOC_HAS_X_TRANSLATION); }
 
